@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yılbaşı Geri Sayım</title>
+  <style>
+  body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #1c1c3c, #1b9aaa);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  overflow: hidden;
+}
+
+.countdown-container {
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+#countdown {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+#countdown div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 2rem;
+}
+
+#countdown span {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+small {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  margin-top: 5px;
+  color: #ddd;
+}
+
+/* Yılbaşı Işıkları */
+.lights {
+  position: absolute;
+  top: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.lights span {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: red;
+  animation: blink 1.5s infinite ease-in-out;
+}
+
+.lights span:nth-child(2) {
+  background: yellow;
+  animation-delay: 0.3s;
+}
+
+.lights span:nth-child(3) {
+  background: green;
+  animation-delay: 0.6s;
+}
+
+.lights span:nth-child(4) {
+  background: blue;
+  animation-delay: 0.9s;
+}
+
+.lights span:nth-child(5) {
+  background: purple;
+  animation-delay: 1.2s;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="lights">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <div class="countdown-container">
+    <h1>🎄 Yılbaşı Geri Sayım 🎉</h1>
+    <div id="countdown">
+      <div><span id="days">0</span><small>Gün</small></div>
+      <div><span id="hours">0</span><small>Saat</small></div>
+      <div><span id="minutes">0</span><small>Dakika</small></div>
+      <div><span id="seconds">0</span><small>Saniye</small></div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+  // Yılbaşı tarihi
+const newYear = new Date('January 1, 2025 00:00:00').getTime();
+
+function updateCountdown() {
+  const now = new Date().getTime();
+  const timeLeft = newYear - now;
+
+  // Zaman hesaplama
+  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+  // DOM'a yazma
+  document.getElementById('days').textContent = days;
+  document.getElementById('hours').textContent = hours;
+  document.getElementById('minutes').textContent = minutes;
+  document.getElementById('seconds').textContent = seconds;
+
+  // Eğer yılbaşı geldiyse
+  if (timeLeft < 0) {
+    clearInterval(countdownInterval);
+
+    // Geri sayım yerine mesaj ve konfeti
+    document.querySelector('.countdown-container').innerHTML = "<h1>🎉 Mutlu Yıllar! 🎉</h1>";
+
+    // Konfeti patlat
+    const confettiSettings = setInterval(() => {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { x: Math.random(), y: Math.random() - 0.2 }
+      });
+    }, 500);
+
+    // Konfeti birkaç saniye sonra durdur
+    setTimeout(() => clearInterval(confettiSettings), 5000);
+
+    // Müzik çal
+    const audio = new Audio('yilbasi.mp3');
+    audio.play();
+  }
+}
+
+// Her saniye güncelle
+const countdownInterval = setInterval(updateCountdown, 1000);
+
+// İlk hesaplama
+updateCountdown();
+
+  </script>
+</body>
+</html>
